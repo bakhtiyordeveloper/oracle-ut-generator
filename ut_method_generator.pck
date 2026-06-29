@@ -257,13 +257,23 @@ is
 
     is
         l_sql clob;
+        v_declare_block clob;
+        v_executable_block clob;
     begin
+        ----
+        ut_code_generator.generate_plsql_block(p_package_name => p_package_name,
+                                         p_object_name => p_method_name,
+                                         o_declare_block => v_declare_block,
+                                         o_executable_block => v_executable_block);
+        ----
 
         l_sql :=
         chr(9) || '-- Test_' || initcap(p_method_name) || chr(10) ||
         chr(9) || 'Procedure Test_' || initcap(p_method_name) ||
-        ' is begin' || chr(10) ||
-        chr(9) || chr(9) || chr(9) || initcap(p_package_name) || '.' || initcap(p_method_name) || ';' || chr(10) ||
+        ' is ' || chr(10) || v_declare_block ||
+        ' begin' || chr(10) ||
+        v_executable_block ||
+        --chr(9) || chr(9) || chr(9) || initcap(p_package_name) || '.' || initcap(p_method_name) || ';' || chr(10) ||
         chr(9) || 'End Test_' || initcap(p_method_name) || ';';
 
         return l_sql;
